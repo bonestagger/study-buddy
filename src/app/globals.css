@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbars */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.3); border-radius: 4px; }
+.touch-target { -webkit-tap-highlight-color: transparent; }
+
+/* ======================================================== */
+/* GOOGLE CLASSROOM-INSPIRED RETRO MONOCHROME THEME         */
+/* Soft, eye-friendly, thin 1px borders, zero visual glare  */
+/* ======================================================== */
+
+:root,
+.palette-retro.mode-light,
+.palette-retro.app-light,
+.palette-coral.mode-light,
+.palette-coral.app-light,
+.palette-blush.mode-light,
+.palette-blush.app-light,
+.palette-midnight.mode-light,
+.palette-midnight.app-light {
+  --bg-screen: #f8f9fa;
+  --bg-header: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-subtle: #f1f3f4;
+  --bg-input: #ffffff;
+  --border: #dadce0;
+  --border-muted: #e8eaed;
+  --text-main: #202124;
+  --text-muted: #5f6368;
+  --nav-bg: #ffffff;
+  --shadow: 0 1px 3px rgba(60, 64, 67, 0.08), 0 1px 2px rgba(60, 64, 67, 0.05);
+  --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.1);
+  --accent-primary: #202124;
+  --accent-glow: rgba(0, 0, 0, 0.06);
+  --accent-gradient: #202124;
+  --accent-btn-text: #ffffff;
+}
+
+.palette-retro.mode-dark,
+.palette-retro.app-dark,
+.palette-coral.mode-dark,
+.palette-coral.app-dark,
+.palette-blush.mode-dark,
+.palette-blush.app-dark,
+.palette-midnight.mode-dark,
+.palette-midnight.app-dark {
+  --bg-screen: #1e1f20;
+  --bg-header: #282a2c;
+  --bg-card: #282a2c;
+  --bg-card-subtle: #313335;
+  --bg-input: #282a2c;
+  --border: #3c4043;
+  --border-muted: #2d2f31;
+  --text-main: #e8eaed;
+  --text-muted: #9aa0a6;
+  --nav-bg: #282a2c;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --accent-primary: #e8eaed;
+  --accent-glow: rgba(255, 255, 255, 0.08);
+  --accent-gradient: #e8eaed;
+  --accent-btn-text: #202124;
+}
+
+/* Core theme mapping classes */
+.theme-screen { background-color: var(--bg-screen); color: var(--text-main); }
+.theme-header { background-color: var(--bg-header); border-color: var(--border); }
+.theme-card { background-color: var(--bg-card); border-color: var(--border); box-shadow: var(--shadow); }
+.theme-subtle { background-color: var(--bg-card-subtle); border-color: var(--border); }
+.theme-input { background-color: var(--bg-input); border-color: var(--border); color: var(--text-main); }
+.theme-border { border-color: var(--border); }
+.theme-text-main { color: var(--text-main); }
+.theme-text-muted { color: var(--text-muted); }
+.theme-nav { background-color: var(--nav-bg); border-color: var(--border); }
+
+/* Clean Google-style action button */
+.accent-btn { 
+  background-color: var(--accent-primary); 
+  color: var(--accent-btn-text);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.15s ease;
+}
+.accent-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.accent-text { color: var(--text-main); font-weight: 700; }
+.accent-border { border-color: var(--border); }
+
+/* Refined thin-border utility classes */
+.thin-border {
+  border: 1px solid var(--border);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.15s ease-out forwards;
+}

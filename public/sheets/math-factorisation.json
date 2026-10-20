@@ -1,0 +1,26 @@
+{
+  "title": "Factorisation Ex 7.2 (Problems #1 to #8)",
+  "subject": "Mathematics",
+  "series": "ICSE Grade 8 Mathematics Practice Series",
+  "chapter": "Chapter 7: Factorisation",
+  "page": "1 of 3",
+  "sections": [
+    {
+      "heading": "Q1. Factorise by grouping terms:",
+      "content": "ax + bx - ay - by\n= x(a + b) - y(a + b)\n= (a + b)(x - y)"
+    },
+    {
+      "heading": "Q2. Factorise the quadratic expression (Middle Term Splitting):",
+      "content": "x² + 9x + 20\n= x² + 5x + 4x + 20\n= x(x + 5) + 4(x + 5)\n= (x + 5)(x + 4)"
+    },
+    {
+      "heading": "Q3. Factorise using Difference of Two Squares:",
+      "content": "49x² - 64y²\n= (7x)² - (8y)²\n= (7x - 8y)(7x + 8y)"
+    },
+    {
+      "heading": "Q4. Common Binomial Factor:",
+      "content": "3x(x - 4) - 2(x - 4)\n= (x - 4)(3x - 2)"
+    }
+  ],
+  "footer": "Page 1 of 3 • ClassNotes ICSE Grade 8"
+}

@@ -1,0 +1,92 @@
+{
+  "id": "/icse-grade8-studyhub",
+  "name": "ICSE Grade 8 ClassNotes Hub",
+  "short_name": "Grade 8 Hub",
+  "description": "Mobile study notes, worksheets, homework alerts, and peer doubt solving for ICSE Grade 8 students.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait-primary",
+  "background_color": "#1E1F20",
+  "theme_color": "#202124",
+  "categories": [
+    "education",
+    "productivity",
+    "books"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "📐 Mathematics Worksheets",
+      "short_name": "Math",
+      "description": "Quickly open Math Factorisation and practice sheets",
+      "url": "/?subject=MATH",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "❓ Ask Class Doubt",
+      "short_name": "Doubts",
+      "description": "Ask questions and get answers from 8-B classmates",
+      "url": "/?tab=doubts",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "📋 Missed Class Requests",
+      "short_name": "Requests",
+      "description": "Request or fulfill absent classmate notes",
+      "url": "/?tab=requests",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  pfpType       String         @default("emoji") // "emoji" or "image"
+  pfpValue      String         @default("🦉")
+  division      String         @default("8-B")
+  rollNumber    String?        @default("14")
+  motto         String         @default("Prepping for Math UT2 📚")
+  xp            Int            @default(0)
+  rankTitle     String         @default("Bronze")
+  palette       String         @default("palette-retro")
+  themeMode     String         @default("light")
+  
+  accounts      Account[]
+  sessions      Session[]
+  notes         Note[]
+  requests      NoteRequest[]
+  questions     Question[]
+  answers       Answer[]
+  kudos         Kudo[]
+  bookmarks     Bookmark[]
+  notifications Notification[]
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Note {
+  id          String     @id @default(cuid())
+  title       String
+  subject     String     // "MATH", "CHEM", "HINDI", "HIST", etc.
+  type        String     // "HW", "BLANK", "SOLVED"
+  isHomework  Boolean    @default(false)
+  dueDate     DateTime?
+  dueDay      String?
+  dueTime     String?
+  fileUrl     String
+  pageCount   Int        @default(1)
+  kudosCount  Int        @default(0)
+  
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  kudos       Kudo[]
+  bookmarks   Bookmark[]
+  questions   Question[]
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model NoteRequest {
+  id          String   @id @default(cuid())
+  title       String
+  subject     String
+  description String?
+  isFulfilled Boolean  @default(false)
+  fulfilledUrl String?
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  title       String
+  subject     String
+  isSolved    Boolean  @default(false)
+  upvotes     Int      @default(0)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  noteId      String?
+  note        Note?    @relation(fields: [noteId], references: [id], onDelete: SetNull)
+  
+  answers     Answer[]
+  createdAt   DateTime @default(now())
+}
+
+model Answer {
+  id          String   @id @default(cuid())
+  content     String
+  isAccepted  Boolean  @default(false)
+  
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+}
+
+model Kudo {
+  id        String   @id @default(cuid())
+  noteId    String
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([noteId, userId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  noteId    String
+  note      Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([noteId, userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      String   // "HOMEWORK_DUE", "ANSWERED", "REQUEST_FULFILLED"
+  isRead    Boolean  @default(false)
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+}
