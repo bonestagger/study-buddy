@@ -42,7 +42,7 @@ export default function SettingsSheet({
   const [motto, setMotto] = useState(user.motto || 'Prepping for Math UT2 📚');
   const [pfpType, setPfpType] = useState(user.pfpType || 'emoji');
   const [pfpValue, setPfpValue] = useState(user.pfpValue || '🦉');
-  const [palette, setPalette] = useState(user.palette || 'palette-retro');
+  const [palette] = useState(user.palette || 'palette-retro');
   const [themeMode, setThemeMode] = useState(user.themeMode || 'light');
 
   if (!isOpen) return null;
@@ -66,10 +66,6 @@ export default function SettingsSheet({
     reader.readAsDataURL(file);
   };
 
-  const handlePaletteSelect = (pal: string, name: string) => {
-    setPalette(pal);
-    showToast(`Applied ${name}! ✨`);
-  };
 
   const toggleReadingMode = () => {
     const nextMode = themeMode === 'dark' ? 'light' : 'dark';
