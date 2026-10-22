@@ -8,8 +8,9 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const email = searchParams.get('email');
+    const name = searchParams.get('name');
 
-    const user = await prisma.user.findFirst({
+    let user = await prisma.user.findFirst({
       where: email ? { email } : undefined,
       include: {
         bookmarks: {
@@ -28,6 +29,40 @@ export async function GET(req: Request) {
         },
       },
     });
+
+    if (!user && email) {
+      user = await prisma.user.create({
+        data: {
+          email,
+          name: name || 'Grade 8 Student',
+          division: '8-B',
+          rollNumber: '1',
+          motto: 'Ready to study! 📚',
+          xp: 50,
+          rankTitle: 'Bronze',
+          palette: 'palette-retro',
+          themeMode: 'light',
+          pfpType: 'emoji',
+          pfpValue: '🦉',
+        },
+        include: {
+          bookmarks: {
+            include: {
+              note: {
+                include: {
+                  user: {
+                    select: {
+                      name: true,
+                      division: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+    }
 
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -69,11 +104,32 @@ export async function PUT(req: Request) {
         ...(palette && { palette }),
         ...(themeMode && { themeMode }),
       },
+      include: {
+        bookmarks: {
+          include: {
+            note: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                    division: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
-    return NextResponse.json(updated);
+    const rank = calculateRank(updated.xp);
+
+    return NextResponse.json({
+      ...updated,
+      currentRank: rank,
+    });
   } catch (error: any) {
-    console.error('Error updating user settings:', error);
+    console.error('Error updating user profile:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

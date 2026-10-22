@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { signIn } from 'next-auth/react';
 
 interface LoginGateProps {
@@ -8,34 +8,41 @@ interface LoginGateProps {
 }
 
 export default function LoginGate({ onDemoLogin }: LoginGateProps) {
+  const [customName, setCustomName] = useState('');
+  const [customEmail, setCustomEmail] = useState('');
+  const [isCustomMode, setIsCustomMode] = useState(false);
+
   const handleGoogleLogin = () => {
-    // If Google OAuth configured, call next-auth signIn('google')
-    // Otherwise falls back to instant demo login
-    signIn('google', { callbackUrl: '/' }).catch(() => {
-      onDemoLogin('Aarav Patel', 'aarav.patel@gmail.com');
-    });
+    signIn('google', { callbackUrl: '/' });
+  };
+
+  const handleCustomSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!customName.trim() || !customEmail.trim()) return;
+    onDemoLogin(customName.trim(), customEmail.trim());
   };
 
   return (
-    <section className="absolute inset-0 z-40 theme-screen flex flex-col justify-between p-6 overflow-y-auto animate-fade-in">
-      <div className="flex-1 flex flex-col items-center justify-center text-center my-auto">
-        <div className="w-20 h-20 rounded-3xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 flex items-center justify-center shadow-md mb-5">
+    <section className="min-h-screen w-full flex flex-col justify-between p-6 overflow-y-auto animate-fade-in bg-[#f8fafd] dark:bg-[#121212]">
+      <div className="flex-1 flex flex-col items-center justify-center text-center my-auto max-w-sm mx-auto w-full">
+        <div className="w-20 h-20 rounded-3xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-slate-800 dark:text-zinc-100 flex items-center justify-center shadow-md mb-5">
           <span className="text-4xl">📚</span>
         </div>
 
-        <span className="inline-block px-3 py-1 bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 rounded-full text-xs font-semibold tracking-wider uppercase mb-2 shadow-2xs">
-          ICSE Grade 8
+        <span className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 rounded-full text-xs font-bold tracking-wider uppercase mb-2">
+          ICSE Grade 8 Hub
         </span>
 
-        <h2 className="text-2xl font-extrabold theme-text-main mb-1.5">ClassNotes Hub</h2>
-        <p className="text-xs theme-text-muted max-w-[260px] leading-relaxed mb-6">
-          The easiest place to find homework worksheets, share notes & solve doubts with classmates.
+        <h2 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100 mb-1.5">Study Buddy</h2>
+        <p className="text-xs text-slate-500 dark:text-zinc-400 max-w-[280px] leading-relaxed mb-6">
+          Find worksheets, share study notes & clear doubts with your Grade 8 classmates.
         </p>
 
-        <div className="w-full max-w-[280px] space-y-3">
+        <div className="w-full space-y-3">
+          {/* Primary: Sign in with Google */}
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-800 font-semibold py-3.5 px-4 rounded-2xl shadow-sm border border-slate-200 transition touch-target active:scale-98 text-xs"
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-800 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:text-zinc-100 font-bold py-3.5 px-4 rounded-2xl shadow-sm border border-slate-200 dark:border-zinc-700 transition touch-target active:scale-98 text-xs"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -58,33 +65,64 @@ export default function LoginGate({ onDemoLogin }: LoginGateProps) {
             <span>Sign in with Google Account</span>
           </button>
 
-          <div className="pt-2 border-t theme-border space-y-1.5">
-            <span className="text-[10px] theme-text-muted block text-center">Quick Switch:</span>
-            <button
-              onClick={() => onDemoLogin('Aarav Patel', 'aarav.patel@gmail.com')}
-              className="w-full text-xs accent-text hover:underline py-1 transition font-bold block"
-            >
-              ⚡ Enter as Aarav Patel (8-B)
-            </button>
-            <button
-              onClick={() => onDemoLogin('Priya Sharma', 'priya.s@student.school.edu')}
-              className="w-full text-xs theme-text-main hover:underline py-1 transition font-bold block"
-            >
-              ⚡ Enter as Priya Sharma (8-B)
-            </button>
-            <button
-              onClick={() => onDemoLogin('Rohan Kumar', 'rohan.k@student.school.edu')}
-              className="w-full text-xs theme-text-main hover:underline py-1 transition font-bold block"
-            >
-              ⚡ Enter as Rohan Kumar (8-A)
-            </button>
+          {/* Divider */}
+          <div className="flex items-center gap-2 py-1">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-zinc-800" />
+            <span className="text-[10px] text-slate-400 font-semibold uppercase">or student name</span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-zinc-800" />
           </div>
+
+          {!isCustomMode ? (
+            <button
+              onClick={() => setIsCustomMode(true)}
+              className="w-full text-xs font-semibold py-2.5 rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/60 text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition"
+            >
+              ✍️ Enter with Student Name & Email
+            </button>
+          ) : (
+            <form onSubmit={handleCustomSubmit} className="space-y-2 text-left animate-fade-in">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 mb-0.5">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Ananya Mishra"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-500 dark:text-zinc-400 mb-0.5">
+                  Your Email
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. ananya@student.school.edu"
+                  value={customEmail}
+                  onChange={(e) => setCustomEmail(e.target.value)}
+                  className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl px-3 py-2 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-xs transition active:scale-98"
+              >
+                Enter ClassNotes Hub 🚀
+              </button>
+            </form>
+          )}
         </div>
       </div>
 
-      <div className="text-center text-[11px] theme-text-muted pt-3 border-t theme-border flex items-center justify-center gap-1.5">
+      <div className="text-center text-[11px] text-slate-400 dark:text-zinc-500 pt-3 border-t border-slate-200 dark:border-zinc-800 flex items-center justify-center gap-1.5">
         <span>🔒</span>
-        <span>Only for registered ICSE Grade 8 students. Safe & private.</span>
+        <span>Peer study hub for ICSE Grade 8 classmates. Safe & private.</span>
       </div>
     </section>
   );

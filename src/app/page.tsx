@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import AppHeader from '@/components/layout/AppHeader';
 import BottomNav, { TabType } from '@/components/layout/BottomNav';
 import SubjectGrid from '@/components/home/SubjectGrid';
@@ -19,8 +20,9 @@ import { calculateRank } from '@/lib/ranks';
 import { getSubject } from '@/lib/subjects';
 
 export default function Home() {
+  const { data: session, status: authStatus } = useSession();
   // User & Auth State
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({
     id: 'student-1',
@@ -71,9 +73,10 @@ export default function Home() {
   };
 
   // Load Initial Data
-  const loadUserData = async (email: string) => {
+  const loadUserData = async (email: string, name?: string) => {
     try {
-      const res = await fetch(`/api/user/settings?email=${encodeURIComponent(email)}`);
+      const query = `/api/user/settings?email=${encodeURIComponent(email)}${name ? '&name=' + encodeURIComponent(name) : ''}`;
+      const res = await fetch(query);
       if (res.ok) {
         const data = await res.json();
         setCurrentUser(data);
@@ -135,19 +138,32 @@ export default function Home() {
   };
 
   useEffect(() => {
-    loadUserData(currentUser.email);
     loadNotes();
     loadRequests();
     loadDoubts();
-    loadNotifications(currentUser.email);
   }, []);
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      loadUserData(session.user.email, session.user.name || undefined);
+      loadNotifications(session.user.email);
+      setIsLoggedIn(true);
+    }
+  }, [session]);
 
   // Demo Login Handler
   const handleDemoLogin = async (name: string, email: string) => {
-    await loadUserData(email);
+    await loadUserData(email, name);
+    loadNotifications(email);
     setIsLoggedIn(true);
     setIsOnboardingOpen(false);
     showToast(`Welcome ${name}! 🎉`);
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    setIsLoggedIn(false);
+    showToast('Signed out successfully.');
   };
 
   const handleOnboardingComplete = async (division: string, rollNumber: string) => {
@@ -404,6 +420,17 @@ export default function Home() {
 
   const unreadNotifs = notifications.filter((n) => !n.isRead).length;
 
+  if (authStatus === 'loading') {
+    return (
+      <div className="min-h-screen w-full flex items-center justify-center bg-[#f8fafd] dark:bg-[#121212]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-9 h-9 border-3 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <span className="text-xs font-semibold text-slate-500 dark:text-zinc-400">Loading Study Hub...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`min-h-screen w-full flex justify-center bg-slate-100 dark:bg-zinc-950 ${
@@ -587,9 +614,8 @@ export default function Home() {
             user={currentUser}
             onSaveSettings={handleSaveSettings}
             onSignOut={() => {
-              setIsLoggedIn(false);
+              handleSignOut();
               setIsSettingsOpen(false);
-              showToast('Signed out successfully.');
             }}
             showToast={showToast}
           />

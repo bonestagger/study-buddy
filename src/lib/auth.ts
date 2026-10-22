@@ -28,18 +28,17 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!user) {
-          // Create new student
           user = await prisma.user.create({
             data: {
               email: credentials.email,
               name: credentials.name || 'New Classmate',
               division: '8-B',
-              rollNumber: '15',
+              rollNumber: '1',
               motto: 'Ready to study! 📚',
               xp: 50,
               rankTitle: 'Bronze',
-              palette: 'palette-midnight',
-              themeMode: 'dark',
+              palette: 'palette-retro',
+              themeMode: 'light',
               pfpType: 'emoji',
               pfpValue: '🦉',
             },
@@ -59,6 +58,37 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        let dbUser = null;
+        if (user.email) {
+          dbUser = await prisma.user.findUnique({
+            where: { email: user.email },
+          });
+
+          if (!dbUser) {
+            dbUser = await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name || 'Grade 8 Student',
+                image: user.image,
+                pfpType: user.image ? 'image' : 'emoji',
+                pfpValue: user.image || '🦉',
+                division: '8-B',
+                rollNumber: '1',
+                motto: 'Ready to study! 📚',
+                xp: 50,
+                rankTitle: 'Bronze',
+                palette: 'palette-retro',
+                themeMode: 'light',
+              },
+            });
+          }
+        }
+        token.sub = dbUser ? dbUser.id : user.id;
+      }
+      return token;
+    },
     async session({ session, token }) {
       if (token?.sub && session.user) {
         (session.user as any).id = token.sub;
@@ -66,6 +96,9 @@ export const authOptions: NextAuthOptions = {
           where: { id: token.sub },
           select: {
             id: true,
+            name: true,
+            email: true,
+            image: true,
             division: true,
             rollNumber: true,
             pfpType: true,
@@ -82,12 +115,6 @@ export const authOptions: NextAuthOptions = {
         }
       }
       return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.sub = user.id;
-      }
-      return token;
     },
   },
   pages: {
