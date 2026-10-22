@@ -17,13 +17,13 @@ export default function SubjectGrid({
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between px-0.5">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-extrabold theme-text-main">Choose Subject:</span>
+          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Choose Subject:</span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[9px] font-bold px-1.5 py-0.5 rounded-md theme-subtle border text-slate-400 hover:theme-text-main transition"
+            className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-600 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 transition"
             title="Toggle between horizontal scroll and full 11-subject grid"
           >
             {isExpanded ? 'Collapse ▴' : 'View All 11 ▾'}
@@ -32,8 +32,10 @@ export default function SubjectGrid({
 
         <button
           onClick={() => onSelectSubject('ALL')}
-          className={`text-[10px] font-bold hover:underline transition ${
-            activeSubject === 'ALL' ? 'accent-text underline font-extrabold' : 'theme-text-muted'
+          className={`text-xs font-bold transition ${
+            activeSubject === 'ALL'
+              ? 'text-blue-600 dark:text-blue-400 underline font-extrabold'
+              : 'text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200'
           }`}
         >
           Show All ({totalCount})
@@ -42,7 +44,7 @@ export default function SubjectGrid({
 
       {isExpanded ? (
         /* Full Expanded 11-Subject Grid */
-        <div className="grid grid-cols-4 gap-1.5 text-center select-none animate-fade-in">
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 text-center select-none animate-fade-in">
           {SUBJECTS.map((sub) => {
             const isActive = activeSubject === sub.id;
             return (
@@ -50,14 +52,14 @@ export default function SubjectGrid({
                 key={sub.id}
                 data-sub={sub.id}
                 onClick={() => onSelectSubject(sub.id)}
-                className={`p-2 rounded-2xl flex flex-col items-center justify-center border transition active:scale-95 ${
+                className={`p-2.5 rounded-2xl flex flex-col items-center justify-center border transition active:scale-95 ${
                   isActive
-                    ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 font-bold shadow-xs'
-                    : 'bg-white dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600 shadow-2xs'
+                    ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-sm'
+                    : 'bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800/60 shadow-2xs'
                 }`}
               >
-                <span className="text-xl mb-0.5">{sub.icon}</span>
-                <span className={`text-[10px] font-bold truncate max-w-full ${isActive ? 'text-inherit' : 'theme-text-main'}`}>
+                <span className="text-2xl mb-1">{sub.icon}</span>
+                <span className={`text-[10px] font-bold truncate max-w-full ${isActive ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>
                   {sub.label}
                 </span>
               </button>
@@ -66,7 +68,7 @@ export default function SubjectGrid({
         </div>
       ) : (
         /* Sleek Horizontal Swipeable Cards Row */
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-0.5 no-scrollbar scroll-smooth snap-x select-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5 no-scrollbar scroll-smooth snap-x select-none">
           {SUBJECTS.map((sub) => {
             const isActive = activeSubject === sub.id;
             return (
@@ -74,14 +76,14 @@ export default function SubjectGrid({
                 key={sub.id}
                 data-sub={sub.id}
                 onClick={() => onSelectSubject(sub.id)}
-                className={`min-w-[70px] p-2 rounded-2xl flex flex-col items-center justify-center border transition active:scale-95 flex-shrink-0 snap-start ${
+                className={`min-w-[76px] p-2.5 rounded-2xl flex flex-col items-center justify-center border transition active:scale-95 flex-shrink-0 snap-start ${
                   isActive
-                    ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 font-bold shadow-xs'
-                    : 'bg-white dark:bg-zinc-800/80 text-slate-700 dark:text-zinc-300 border-slate-200 dark:border-zinc-700 hover:border-slate-300 dark:hover:border-zinc-600 shadow-2xs'
+                    ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-sm'
+                    : 'bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-200 border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 hover:bg-slate-50 dark:hover:bg-zinc-800/60 shadow-2xs'
                 }`}
               >
-                <span className="text-xl mb-0.5">{sub.icon}</span>
-                <span className={`text-[10px] font-bold truncate max-w-full ${isActive ? 'text-inherit' : 'theme-text-main'}`}>
+                <span className="text-2xl mb-1">{sub.icon}</span>
+                <span className={`text-[10px] font-bold truncate max-w-full ${isActive ? 'text-white' : 'text-slate-800 dark:text-slate-200'}`}>
                   {sub.label}
                 </span>
               </button>

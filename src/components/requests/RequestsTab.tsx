@@ -48,105 +48,111 @@ export default function RequestsTab({
       }`}
     >
       {/* Top Banner */}
-      <div className="p-3.5 rounded-2xl theme-card border border-slate-200 dark:border-zinc-800 shadow-xs space-y-2">
+      <div className="p-4 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-xs space-y-2.5">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-bold theme-text-main flex items-center gap-1.5">
+            <h2 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
               <span>🙋‍♂️ Missed a Class?</span>
             </h2>
-            <p className="text-[10px] theme-text-muted">Ask classmates for notes or worksheets!</p>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400">Ask classmates for notes or worksheets!</p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-3 py-2 accent-btn rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1 transition active:scale-95"
+            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-xs flex items-center gap-1.5 transition active:scale-95"
           >
             <span>+</span> Ask for Notes
           </button>
         </div>
-        <div className="p-2 rounded-xl bg-slate-50 dark:bg-zinc-800/60 border border-slate-200/80 dark:border-zinc-700/60 text-[10px] theme-text-main font-medium flex items-center gap-1.5">
-          <span>🎁</span> Classmates earn <strong className="underline">+75 XP</strong> for sending missing sheets!
+        <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/50 text-xs text-amber-900 dark:text-amber-200 font-medium flex items-center gap-2">
+          <span>🎁</span> Classmates earn <strong className="font-bold underline text-amber-700 dark:text-amber-300">+75 XP</strong> for sharing missing sheets!
         </div>
       </div>
 
       {/* Active Requests List */}
       <div className="space-y-2.5">
-        <span className="text-[11px] font-bold theme-text-muted uppercase tracking-wider block px-1">
+        <span className="text-[11px] font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider block px-1">
           Active Requests ({requests.length}):
         </span>
 
         <div className="space-y-2.5">
-          {requests.map((req) => (
-            <div key={req.id} className="theme-card border border-slate-200 dark:border-zinc-800 rounded-2xl p-3.5 space-y-2 shadow-xs hover:border-slate-300 dark:hover:border-zinc-700 transition">
-              <div className="flex items-center justify-between">
-                {req.isFulfilled ? (
-                  <span className="px-2.5 py-0.5 rounded-full text-[9px] font-bold bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 flex items-center gap-1">
-                    <span>✓</span> Fulfilled
+          {requests.map((req) => {
+            const subInfo = getSubject(req.subject);
+            return (
+              <div key={req.id} className="bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-2xl p-4 space-y-2.5 shadow-xs hover:border-slate-300 dark:hover:border-zinc-700 transition">
+                <div className="flex items-center justify-between">
+                  <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] flex items-center gap-1.5 ${subInfo.bgBadge}`}>
+                    <span>{subInfo.icon}</span> <span>{subInfo.fullName}</span>
                   </span>
-                ) : (
-                  <span className="px-2.5 py-0.5 rounded-full text-[9px] font-medium bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 flex items-center gap-1">
-                    <span>⏳</span> Waiting for Notes
+                  {req.isFulfilled ? (
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 flex items-center gap-1">
+                      <span>✓</span> Fulfilled
+                    </span>
+                  ) : (
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 flex items-center gap-1">
+                      <span>⏳</span> Waiting
+                    </span>
+                  )}
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <span>{req.title}</span>
+                  </h4>
+                  {req.description && (
+                    <p className="text-xs text-slate-600 dark:text-zinc-300 mt-1 bg-slate-50 dark:bg-zinc-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-zinc-700 leading-relaxed">
+                      "{req.description}"
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-zinc-800 text-xs">
+                  <span className="text-slate-500 dark:text-zinc-400">
+                    Asked by <strong className="text-slate-800 dark:text-slate-200 font-semibold">{req.user.name} ({req.user.division})</strong>
                   </span>
-                )}
-                <span className="text-[10px] theme-text-muted">Active</span>
-              </div>
 
-              <div>
-                <h4 className="text-xs font-bold theme-text-main flex items-center gap-1">
-                  <span>{getSubject(req.subject).icon}</span>
-                  <span>{req.title}</span>
-                </h4>
-                {req.description && (
-                  <p className="text-[11px] theme-text-muted mt-1 bg-slate-500/5 p-2 rounded-xl border theme-border leading-relaxed">
-                    "{req.description}"
-                  </p>
-                )}
+                  {req.isFulfilled ? (
+                    <span className="text-emerald-600 dark:text-emerald-400 font-bold">✓ Sent Notes! (+75 XP)</span>
+                  ) : (
+                    <button
+                      onClick={() => onFulfill(req.id, req.user.name, req.title)}
+                      className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-xs active:scale-95 flex items-center gap-1.5"
+                    >
+                      <span>📎 Send Notes</span>
+                      <span className="bg-emerald-700/80 px-1 py-0.5 rounded text-[10px]">+75 XP</span>
+                    </button>
+                  )}
+                </div>
               </div>
-
-              <div className="flex items-center justify-between pt-2 border-t theme-border text-[10px]">
-                <span className="theme-text-muted">
-                  Asked by <strong className="theme-text-main font-semibold">{req.user.name} ({req.user.division})</strong>
-                </span>
-
-                {req.isFulfilled ? (
-                  <span className="text-emerald-500 font-extrabold">✓ Sent Notes! (+75 XP)</span>
-                ) : (
-                  <button
-                    onClick={() => onFulfill(req.id, req.user.name, req.title)}
-                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-[10px] transition shadow active:scale-95 flex items-center gap-1.5"
-                  >
-                    <span>📎 Send Notes</span>
-                    <span className="bg-emerald-700 px-1 py-0.2 rounded text-[9px]">+75 XP</span>
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
       {/* New Request Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end animate-fade-in">
-          <div className="theme-card rounded-t-3xl p-4 pb-10 border-t space-y-3.5 max-h-[85%] overflow-y-auto">
-            <div className="flex items-center justify-between pb-2 border-b theme-border">
-              <h3 className="text-xs font-extrabold theme-text-main flex items-center gap-1.5">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4 animate-fade-in">
+          <div className="w-full sm:max-w-md bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-3xl p-5 border border-slate-200 dark:border-zinc-800 space-y-3.5 max-h-[85vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-zinc-800">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
                 <span>🙋‍♂️ Ask Class for Missing Notes</span>
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-white text-xs font-bold"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold"
               >
                 ✕ Cancel
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-3 text-xs">
+            <form onSubmit={handleCreateSubmit} className="space-y-3">
               <div>
-                <label className="block font-bold theme-text-main mb-1">Which subject?</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1">
+                  Subject
+                </label>
                 <select
                   value={sub}
                   onChange={(e) => setSub(e.target.value)}
-                  className="w-full theme-input border rounded-xl p-2.5 font-bold focus:outline-none"
+                  className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {SUBJECTS.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -157,35 +163,41 @@ export default function RequestsTab({
               </div>
 
               <div>
-                <label className="block font-bold theme-text-main mb-1">
-                  What worksheet or chapter notes do you need?
+                <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1">
+                  Topic or Worksheet Needed *
                 </label>
                 <input
                   type="text"
+                  required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Hindi Vyakaran: Sandhi practice questions"
-                  required
-                  className="w-full theme-input border rounded-xl p-2.5 font-medium focus:outline-none placeholder-slate-400"
+                  placeholder="e.g. Chapter 4 Factorisation Exercise 4B solved"
+                  className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
                 />
               </div>
 
               <div>
-                <label className="block font-bold theme-text-main mb-1">Additional details (Optional):</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-zinc-300 mb-1">
+                  Details / Which questions?
+                </label>
                 <textarea
+                  rows={2}
                   value={desc}
                   onChange={(e) => setDesc(e.target.value)}
-                  rows={2}
-                  placeholder="e.g. Was absent on Tuesday due to fever"
-                  className="w-full theme-input border rounded-xl p-2.5 font-medium focus:outline-none placeholder-slate-400"
+                  placeholder="e.g. Missed Tuesday class. Need page 45 Q3 to Q8."
+                  className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400"
                 />
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200/80 dark:border-blue-800/50 text-[11px] text-blue-800 dark:text-blue-300 font-medium">
+                📢 Your request will appear on the class board for all Section 8-B classmates!
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3.5 accent-btn font-extrabold rounded-xl shadow-md transition active:scale-98"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow-md transition active:scale-95"
               >
-                Send Request to Classmates 🚀
+                Post Request to Classmates 🚀
               </button>
             </form>
           </div>

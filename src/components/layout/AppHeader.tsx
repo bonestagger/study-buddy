@@ -22,13 +22,13 @@ export default function AppHeader({
   onOpenSettings,
 }: AppHeaderProps) {
   return (
-    <header className="px-4 py-3 theme-header backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between z-20 transition-colors">
+    <header className="px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between z-20 transition-colors sticky top-0">
       <div
-        className="flex items-center space-x-2.5 cursor-pointer active:opacity-80 transition"
+        className="flex items-center space-x-3 cursor-pointer active:opacity-80 transition"
         onClick={onOpenSettings}
         title="Tap to change avatar & settings"
       >
-        <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-200 dark:border-zinc-700 bg-slate-100 dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 flex items-center justify-center text-lg shadow-xs">
+        <div className="w-10 h-10 rounded-full overflow-hidden border border-blue-200 dark:border-zinc-700 bg-blue-50 dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 flex items-center justify-center text-xl shadow-xs">
           {user.pfpType === 'image' && user.pfpValue ? (
             <img src={user.pfpValue} alt="User Avatar" className="w-full h-full object-cover" />
           ) : (
@@ -36,19 +36,19 @@ export default function AppHeader({
           )}
         </div>
         <div>
-          <div className="text-xs font-bold theme-text-main flex items-center gap-1.5 leading-none">
+          <div className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 leading-none">
             <span>{user.name}</span>
-            <span className="px-2 py-0.5 bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 text-[9px] rounded-full font-bold border border-slate-200/80 dark:border-zinc-700/60">
+            <span className="px-2 py-0.5 bg-blue-50 dark:bg-zinc-800 text-blue-700 dark:text-blue-300 text-[10px] rounded-full font-bold border border-blue-200/80 dark:border-zinc-700">
               {user.division}
             </span>
           </div>
-          <p className="text-[10px] theme-text-muted mt-1 truncate max-w-[150px]">
+          <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1 truncate max-w-[200px]">
             🎯 {user.motto}
           </p>
         </div>
       </div>
 
-      <div className="flex items-center space-x-1.5">
+      <div className="flex items-center space-x-2">
         <button
           onClick={onOpenNotifications}
           className="relative p-2 rounded-full border border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 active:scale-95 transition"
@@ -63,7 +63,7 @@ export default function AppHeader({
             />
           </svg>
           {unreadCount > 0 && (
-            <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 rounded-full text-[8px] font-extrabold flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full text-[9px] font-bold flex items-center justify-center shadow-xs">
               {unreadCount}
             </span>
           )}

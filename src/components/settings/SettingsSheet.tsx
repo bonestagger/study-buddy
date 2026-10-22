@@ -66,11 +66,10 @@ export default function SettingsSheet({
     reader.readAsDataURL(file);
   };
 
-
   const toggleReadingMode = () => {
     const nextMode = themeMode === 'dark' ? 'light' : 'dark';
     setThemeMode(nextMode);
-    showToast(`Switched to ${nextMode === 'dark' ? 'Retro Terminal (Dark)' : 'Retro Paper (Light)'} Mode`);
+    showToast(`Switched to ${nextMode === 'dark' ? 'Dark' : 'Light'} Mode`);
   };
 
   const handleSave = () => {
@@ -88,26 +87,26 @@ export default function SettingsSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex flex-col justify-end animate-fade-in">
-      <div className="theme-card rounded-t-3xl p-4 border-t space-y-4 max-h-[92%] overflow-y-auto">
-        <div className="flex items-center justify-between pb-2 border-b theme-border">
-          <h3 className="text-xs font-extrabold theme-text-main flex items-center gap-1.5">
-            <span>⚙️ My App Settings</span>
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4 animate-fade-in">
+      <div className="w-full sm:max-w-md bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-3xl p-5 border border-slate-200 dark:border-zinc-800 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-zinc-800">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <span>⚙️ Profile & Settings</span>
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-xs font-bold px-2 py-0.5 rounded-lg theme-subtle"
+            className="text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 transition"
           >
-            ✕ Done
+            ✕ Close
           </button>
         </div>
 
         {/* Section 1: PFP & Mascots */}
-        <div className="p-3 rounded-2xl theme-subtle border theme-border space-y-2.5">
-          <span className="block font-bold theme-text-main text-xs">📸 My Profile Picture</span>
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-3">
+          <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">📸 Profile Picture</span>
 
           <div className="flex items-center gap-3">
-            <div className="w-13 h-13 rounded-full overflow-hidden accent-btn flex items-center justify-center text-white text-2xl ring-2 ring-indigo-500/50 shadow flex-shrink-0" style={{ width: 52, height: 52 }}>
+            <div className="w-12 h-12 rounded-full overflow-hidden bg-blue-50 dark:bg-zinc-800 border-2 border-blue-500 flex items-center justify-center text-2xl shadow-sm flex-shrink-0">
               {pfpType === 'image' && pfpValue ? (
                 <img src={pfpValue} alt="PFP Preview" className="w-full h-full object-cover" />
               ) : (
@@ -116,11 +115,11 @@ export default function SettingsSheet({
             </div>
 
             <div className="space-y-1 flex-1">
-              <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 accent-btn text-xs font-bold rounded-xl shadow active:scale-95 transition">
+              <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs active:scale-95 transition">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <span>Upload My Photo</span>
+                <span>Upload Photo</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -128,20 +127,20 @@ export default function SettingsSheet({
                   className="hidden"
                 />
               </label>
-              <p className="text-[9px] theme-text-muted">Take photo with camera or choose from gallery</p>
+              <p className="text-[10px] text-slate-500 dark:text-zinc-400">Take photo or choose from gallery</p>
             </div>
           </div>
 
-          <div className="pt-2 border-t theme-border">
-            <span className="block text-[10px] theme-text-muted mb-1.5">Or choose a mascot:</span>
+          <div className="pt-2 border-t border-slate-200/80 dark:border-zinc-700/60">
+            <span className="block text-[10px] text-slate-500 dark:text-zinc-400 mb-1.5">Or choose a mascot:</span>
             <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              {['🦉', '🚀', '⚡', '🦊', '🧪', '🤖'].map((mascot) => (
+              {['🦉', '🚀', '⚡', '🦊', '🧪', '🤖', '🎓', '📚'].map((mascot) => (
                 <button
                   key={mascot}
                   type="button"
                   onClick={() => handleMascotSelect(mascot)}
-                  className={`w-9 h-9 rounded-full theme-card border flex items-center justify-center text-lg hover:scale-110 flex-shrink-0 active:scale-90 transition ${
-                    pfpType === 'emoji' && pfpValue === mascot ? 'ring-2 ring-indigo-500 scale-105' : ''
+                  className={`w-9 h-9 rounded-full bg-white dark:bg-zinc-800 border flex items-center justify-center text-lg hover:scale-110 flex-shrink-0 active:scale-90 transition ${
+                    pfpType === 'emoji' && pfpValue === mascot ? 'ring-2 ring-blue-500 border-blue-500 scale-105' : 'border-slate-200 dark:border-zinc-700'
                   }`}
                 >
                   {mascot}
@@ -151,70 +150,51 @@ export default function SettingsSheet({
           </div>
         </div>
 
-        {/* Section 2: Simple Retro Black & White Theme */}
-        <div className="p-3.5 rounded-2xl theme-subtle border border-slate-200 dark:border-zinc-800 shadow-xs space-y-3">
+        {/* Section 2: Display Theme */}
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-2.5">
           <div className="flex items-center justify-between">
-            <span className="block font-bold theme-text-main text-xs flex items-center gap-1.5">
-              <span>📼 Theme: Retro Black & White</span>
-            </span>
-            <span className="text-[9px] px-2.5 py-0.5 rounded-full font-bold bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900">
-              Active Theme
-            </span>
-          </div>
-
-          <p className="text-[10px] theme-text-muted leading-relaxed">
-            Minimalist, high-contrast monochrome design engineered for zero eye strain and maximum study focus.
-          </p>
-
-          {/* Retro Monochrome Palette Swatches */}
-          <div className="p-2.5 rounded-xl border border-slate-200/80 dark:border-zinc-700/60 bg-white dark:bg-zinc-800/80 flex items-center justify-between shadow-xs">
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded border border-slate-300 dark:border-zinc-600 bg-white inline-block shadow-xs" title="Paper White #F8F9FA" />
-              <span className="w-6 h-6 rounded border border-slate-300 dark:border-zinc-600 bg-neutral-900 inline-block shadow-xs" title="Jet Ink #202124" />
-              <span className="w-6 h-6 rounded border border-slate-300 dark:border-zinc-600 bg-slate-500 inline-block shadow-xs" title="Charcoal #5F6368" />
-              <span className="w-6 h-6 rounded border border-slate-300 dark:border-zinc-600 bg-slate-100 inline-block shadow-xs" title="Canvas #F1F3F4" />
+            <div>
+              <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">
+                🎨 Display Theme
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                Google Classroom clean aesthetic with bright accents
+              </p>
             </div>
-            <span className="text-[10px] font-mono font-bold theme-text-main">
-              B&W RETRO
-            </span>
-          </div>
 
-          {/* Reading Mode Switcher */}
-          <div className="flex items-center justify-between pt-2 border-t theme-border text-xs">
-            <span className="theme-text-main font-semibold">Display Mode</span>
             <button
               type="button"
               data-testid="toggle-reading-mode"
               onClick={toggleReadingMode}
-              className="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 theme-text-main font-semibold text-xs flex items-center gap-1.5 shadow-xs active:scale-95 transition"
+              className="px-3.5 py-1.5 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white hover:bg-slate-100 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-900 dark:text-zinc-100 font-bold text-xs flex items-center gap-2 shadow-xs active:scale-95 transition"
             >
               <span>{themeMode === 'dark' ? '🌙' : '☀️'}</span>
-              <span>{themeMode === 'dark' ? 'Retro Terminal (Dark)' : 'Retro Paper (Light)'}</span>
+              <span>{themeMode === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>
             </button>
           </div>
         </div>
 
         {/* Section 3: Study Status */}
-        <div className="p-3 rounded-2xl theme-subtle border theme-border space-y-1.5">
-          <span className="block font-bold theme-text-main text-xs">🎯 My Study Status</span>
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-1.5">
+          <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">🎯 My Study Status</span>
           <input
             type="text"
             value={motto}
             onChange={(e) => setMotto(e.target.value)}
-            className="w-full theme-input border rounded-xl p-2.5 text-xs font-semibold focus:outline-none"
+            className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Section 4: Section / Division Details */}
-        <div className="p-3 rounded-2xl theme-subtle border theme-border space-y-2">
-          <span className="block font-bold theme-text-main text-xs">🎓 My Division</span>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-2">
+          <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">🎓 My Division & Roll</span>
+          <div className="grid grid-cols-2 gap-2.5 text-xs">
             <div>
-              <label className="block text-[10px] theme-text-muted mb-0.5">Section</label>
+              <label className="block text-[10px] text-slate-500 dark:text-zinc-400 mb-1">Section</label>
               <select
                 value={division}
                 onChange={(e) => setDivision(e.target.value)}
-                className="w-full theme-input border rounded-xl p-2.5 font-bold"
+                className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="8-A">Section 8-A</option>
                 <option value="8-B">Section 8-B</option>
@@ -224,54 +204,27 @@ export default function SettingsSheet({
               </select>
             </div>
             <div>
-              <label className="block text-[10px] theme-text-muted mb-0.5">Roll No.</label>
+              <label className="block text-[10px] text-slate-500 dark:text-zinc-400 mb-1">Roll No.</label>
               <input
                 type="text"
                 value={rollNumber}
                 onChange={(e) => setRollNumber(e.target.value)}
-                className="w-full theme-input border rounded-xl p-2.5 font-bold"
+                className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
         </div>
 
-        {/* Section 5: PWA Mobile App Installation */}
-        <div className="p-3 rounded-2xl theme-subtle border theme-border space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="block font-bold theme-text-main text-xs flex items-center gap-1.5">
-              <span>📱</span> Mobile App (PWA)
-            </span>
-            <span className="text-[10px] text-emerald-500 font-bold">Offline Ready</span>
-          </div>
-          <p className="text-[10px] theme-text-muted leading-relaxed">
-            Install this hub to your phone or tablet home screen for a full-screen study experience and offline worksheet access.
-          </p>
-          <button
-            type="button"
-            data-testid="pwa-install-btn"
-            onClick={() => {
-              if (window.deferredPrompt) {
-                window.deferredPrompt.prompt();
-              } else {
-                showToast('📱 Browser menu (⋮ or Share) ➔ "Add to Home Screen"');
-              }
-            }}
-            className="w-full py-2.5 px-3 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 theme-text-main font-bold text-xs flex items-center justify-center gap-2 shadow-xs active:scale-98 transition"
-          >
-            <span>📲</span> Install to Home Screen
-          </button>
-        </div>
-
         <button
           onClick={handleSave}
-          className="w-full py-3.5 accent-btn font-extrabold rounded-2xl text-xs shadow-md transition active:scale-98"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-xs shadow-md transition active:scale-98"
         >
           Save Changes ✨
         </button>
 
         <button
           onClick={onSignOut}
-          className="w-full text-center text-xs text-rose-500 font-bold py-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 transition active:scale-98"
+          className="w-full text-center text-xs text-rose-500 hover:text-rose-600 font-bold py-2.5 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50 dark:bg-rose-950/20 transition active:scale-98"
         >
           Sign Out
         </button>

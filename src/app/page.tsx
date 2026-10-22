@@ -59,20 +59,7 @@ export default function Home() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [toastTimeout, setToastTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // Clock
-  const [currentTime, setCurrentTime] = useState<string>('09:41');
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      setCurrentTime(
-        `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  
 
   const showToast = (msg: string) => {
     if (toastTimeout) clearTimeout(toastTimeout);
@@ -418,67 +405,23 @@ export default function Home() {
   const unreadNotifs = notifications.filter((n) => !n.isRead).length;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center">
-      {/* Desktop Preview Header */}
-      <header className="w-full max-w-md mb-3 flex items-center justify-between px-2 select-none">
-        <div className="flex items-center space-x-2">
-          <span className="inline-flex items-center justify-center w-7 h-7 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-md">
-            8
-          </span>
-          <div>
-            <h1 className="text-sm font-semibold text-white tracking-wide">ICSE Grade 8 StudyHub</h1>
-            <p className="text-[11px] text-slate-400">ClassNotes Hub • Mobile PWA</p>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => {
-              const nextMode = currentUser.themeMode === 'dark' ? 'light' : 'dark';
-              handleSaveSettings({ ...currentUser, themeMode: nextMode });
-              showToast(`Switched to ${nextMode === 'dark' ? 'Retro Terminal (Dark)' : 'Retro Paper (Light)'} Mode`);
-            }}
-            className="px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition shadow-sm active:scale-95"
-          >
-            <span>{currentUser.themeMode === 'dark' ? '🌙' : '☀️'}</span>
-            <span>{currentUser.themeMode === 'dark' ? 'Retro Terminal' : 'Retro Paper'}</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Smartphone Viewport */}
-      <div className="relative w-full max-w-[390px] h-[800px] bg-slate-950 rounded-[44px] p-3 shadow-2xl border-4 border-slate-700 flex flex-col overflow-hidden ring-1 ring-slate-800">
-        {/* Dynamic Island / Status Bar */}
-        <div className="w-full flex items-center justify-between px-6 pt-2 pb-1 z-30 select-none">
-          <span className="text-xs font-semibold text-slate-300">{currentTime}</span>
-          <div className="w-24 h-4 bg-black rounded-full flex items-center justify-center space-x-1.5 border border-slate-800">
-            <div className="w-2 h-2 rounded-full bg-slate-900" />
-            <div className="w-1.5 h-1.5 rounded-full bg-blue-950" />
-          </div>
-          <div className="flex items-center space-x-1.5 text-slate-300 text-xs">
-            <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z" />
-            </svg>
-            <span>5G</span>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17 4h-3V2h-4v2H7v18h10V4z" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Dynamic Theme Screen */}
-        <div
-          className={`${currentUser.palette} ${
-            currentUser.themeMode === 'dark' ? 'app-dark mode-dark' : 'app-light mode-light'
-          } theme-screen relative w-full flex-1 rounded-[32px] overflow-hidden flex flex-col transition-colors duration-200`}
-        >
-          {/* Strict Login Gate */}
-          {!isLoggedIn ? (
-            <LoginGate onDemoLogin={handleDemoLogin} />
-          ) : (
-            <>
-              {/* Top Header */}
-              <AppHeader
+    <div
+      className={`min-h-screen w-full flex justify-center bg-slate-100 dark:bg-zinc-950 ${
+        currentUser.themeMode === 'dark' ? 'dark' : ''
+      }`}
+    >
+      <div
+        className={`${currentUser.palette} ${
+          currentUser.themeMode === 'dark' ? 'app-dark mode-dark' : 'app-light mode-light'
+        } theme-screen relative w-full max-w-2xl min-h-screen shadow-md flex flex-col transition-colors duration-200 border-x border-slate-200 dark:border-zinc-800 bg-[#f8fafd] dark:bg-[#121212]`}
+      >
+        {/* Strict Login Gate */}
+        {!isLoggedIn ? (
+          <LoginGate onDemoLogin={handleDemoLogin} />
+        ) : (
+          <>
+            {/* Top Header */}
+            <AppHeader
                 user={currentUser}
                 unreadCount={unreadNotifs}
                 onOpenNotifications={() => setIsNotifOpen(true)}
@@ -508,7 +451,7 @@ export default function Home() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search chapter or topic (e.g. Factorisation, Valency)..."
-                      className="w-full theme-input border rounded-2xl pl-10 pr-3.5 py-2.5 text-xs placeholder-slate-400 focus:outline-none transition shadow-sm font-medium"
+                      className="w-full bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-900 dark:text-slate-100 rounded-2xl pl-10 pr-3.5 py-2.5 text-xs placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-xs font-medium"
                     />
                   </div>
 
@@ -666,7 +609,7 @@ export default function Home() {
 
           {/* Toast Notification Banner */}
           {toastMessage && (
-            <div className="absolute top-14 inset-x-4 z-50 bg-indigo-600 text-white text-xs font-bold px-3.5 py-2.5 rounded-2xl shadow-xl flex items-center justify-between animate-fade-in">
+            <div className="fixed top-5 inset-x-4 max-w-md mx-auto z-50 bg-blue-600 text-white text-xs font-bold px-4 py-3 rounded-2xl shadow-xl flex items-center justify-between animate-fade-in">
               <span>{toastMessage}</span>
               <button
                 onClick={() => setToastMessage(null)}
@@ -677,10 +620,6 @@ export default function Home() {
             </div>
           )}
         </div>
-
-        {/* Phone Bottom Home Bar Indicator */}
-        <div className="w-32 h-1 bg-slate-700 rounded-full mx-auto mt-2 select-none" />
       </div>
-    </div>
   );
 }

@@ -3,14 +3,14 @@
 @tailwind utilities;
 
 /* Custom scrollbars */
-::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.3); border-radius: 4px; }
 .touch-target { -webkit-tap-highlight-color: transparent; }
 
 /* ======================================================== */
-/* GOOGLE CLASSROOM-INSPIRED RETRO MONOCHROME THEME         */
-/* Soft, eye-friendly, thin 1px borders, zero visual glare  */
+/* GOOGLE CLASSROOM-INSPIRED VIBRANT & CLEAN THEME           */
+/* Clean white cards, high-contrast readable text, color pop */
 /* ======================================================== */
 
 :root,
@@ -22,25 +22,26 @@
 .palette-blush.app-light,
 .palette-midnight.mode-light,
 .palette-midnight.app-light {
-  --bg-screen: #f8f9fa;
+  --bg-screen: #f8fafd;
   --bg-header: #ffffff;
   --bg-card: #ffffff;
-  --bg-card-subtle: #f1f3f4;
+  --bg-card-subtle: #f1f5f9;
   --bg-input: #ffffff;
-  --border: #dadce0;
-  --border-muted: #e8eaed;
-  --text-main: #202124;
-  --text-muted: #5f6368;
+  --border: #e2e8f0;
+  --border-muted: #edf2f7;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
   --nav-bg: #ffffff;
-  --shadow: 0 1px 3px rgba(60, 64, 67, 0.08), 0 1px 2px rgba(60, 64, 67, 0.05);
-  --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.1);
-  --accent-primary: #202124;
-  --accent-glow: rgba(0, 0, 0, 0.06);
-  --accent-gradient: #202124;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --accent-primary: #1a73e8;
+  --accent-glow: rgba(26, 115, 232, 0.15);
+  --accent-gradient: #1a73e8;
   --accent-btn-text: #ffffff;
 }
 
+.dark,
 .palette-retro.mode-dark,
 .palette-retro.app-dark,
 .palette-coral.mode-dark,
@@ -49,23 +50,23 @@
 .palette-blush.app-dark,
 .palette-midnight.mode-dark,
 .palette-midnight.app-dark {
-  --bg-screen: #1e1f20;
-  --bg-header: #282a2c;
-  --bg-card: #282a2c;
-  --bg-card-subtle: #313335;
-  --bg-input: #282a2c;
-  --border: #3c4043;
-  --border-muted: #2d2f31;
-  --text-main: #e8eaed;
-  --text-muted: #9aa0a6;
-  --nav-bg: #282a2c;
+  --bg-screen: #121212;
+  --bg-header: #1e1e1e;
+  --bg-card: #1e1e1e;
+  --bg-card-subtle: #292929;
+  --bg-input: #1e1e1e;
+  --border: #2e2e2e;
+  --border-muted: #242424;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --nav-bg: #1e1e1e;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --accent-primary: #e8eaed;
-  --accent-glow: rgba(255, 255, 255, 0.08);
-  --accent-gradient: #e8eaed;
-  --accent-btn-text: #202124;
+  --accent-primary: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.2);
+  --accent-gradient: #3b82f6;
+  --accent-btn-text: #ffffff;
 }
 
 /* Core theme mapping classes */
@@ -81,21 +82,27 @@
 
 /* Clean Google-style action button */
 .accent-btn { 
-  background-color: var(--accent-primary); 
-  color: var(--accent-btn-text);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
+  background-color: #1a73e8; 
+  color: #ffffff !important;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: all 0.15s ease;
+}
+.dark .accent-btn {
+  background-color: #2563eb;
+  color: #ffffff !important;
+}
+.accent-btn:hover {
+  background-color: #1557b0;
 }
 .accent-btn:active {
   transform: scale(0.98);
-  opacity: 0.9;
 }
 
-.accent-text { color: var(--text-main); font-weight: 700; }
+.accent-text { color: #1a73e8; font-weight: 700; }
+.dark .accent-text { color: #60a5fa; }
 .accent-border { border-color: var(--border); }
 
-/* Refined thin-border utility classes */
 .thin-border {
   border: 1px solid var(--border);
 }

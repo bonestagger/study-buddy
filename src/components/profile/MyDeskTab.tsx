@@ -131,7 +131,7 @@ export default function MyDeskTab({
 
         <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 overflow-hidden">
           <div
-            className="h-full bg-neutral-900 dark:bg-zinc-100 rounded-full transition-all duration-500"
+            className="h-full bg-blue-600 rounded-full transition-all duration-500"
             style={{ width: `${progressPct}%` }}
           />
         </div>

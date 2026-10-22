@@ -47,7 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-center p-0 sm:p-4 font-sans antialiased selection:bg-neutral-800 selection:text-white">
+      <body className="bg-slate-100 dark:bg-zinc-950 text-slate-900 dark:text-slate-100 min-h-screen font-sans antialiased selection:bg-blue-600 selection:text-white">
         <AuthProvider>
           {children}
           <ServiceWorkerRegister />
