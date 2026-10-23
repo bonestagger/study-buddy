@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SUBJECTS } from '@/lib/subjects';
 
 interface ShareModalProps {
@@ -25,6 +25,17 @@ export default function ShareModal({
   const [title, setTitle] = useState('');
   const [photoCount, setPhotoCount] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Close on Escape key for desktop PC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -59,14 +70,13 @@ export default function ShareModal({
           type,
           dueDay: type === 'HW' ? dueDay : null,
           dueTime: type === 'HW' ? dueTime : null,
+          isHomework: type === 'HW',
           pageCount: photoCount || 2,
           fileUrl:
             subject === 'MATH'
               ? '/sheets/math-factorisation.json'
               : subject === 'CHEM'
               ? '/sheets/chem-valency.json'
-              : subject === 'HINDI'
-              ? '/sheets/hindi-sandhi.json'
               : '/sheets/hist-1857.json',
           userEmail,
         }),
@@ -88,33 +98,33 @@ export default function ShareModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm flex flex-col justify-end animate-fade-in">
-      <div className="theme-card rounded-t-3xl p-4 border-t space-y-3.5 max-h-[92%] overflow-y-auto">
-        <div className="flex items-center justify-between pb-2 border-b theme-border">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4 animate-fade-in">
+      <div className="w-full sm:max-w-lg bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-3xl p-5 border border-slate-200 dark:border-zinc-800 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-zinc-800">
           <div>
-            <h2 className="text-sm font-extrabold theme-text-main flex items-center gap-1.5">
+            <h2 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
               <span>🚀 Share Notes with Class</span>
             </h2>
-            <p className="text-[10px] theme-text-muted">Takes only 10 seconds to help classmates!</p>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">Help your Section 8-B classmates study and earn XP!</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-1 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white rounded-full font-mono font-extrabold text-[10px]">
+            <span className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 rounded-full font-mono font-bold text-xs">
               +50 XP
             </span>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-white text-xs font-bold px-2 py-0.5 rounded-lg theme-subtle"
+              className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs font-bold px-2 py-1 rounded-lg bg-slate-100 dark:bg-zinc-800"
             >
-              ✕
+              ✕ (Esc)
             </button>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3 text-xs">
-          {/* Step 1: Big Friendly Subject Buttons */}
-          <div className="theme-subtle p-3 rounded-2xl border theme-border space-y-1.5">
-            <span className="block font-bold theme-text-main text-[11px]">1. Choose Subject (11 Subjects):</span>
-            <div className="grid grid-cols-2 gap-1.5 max-h-[160px] overflow-y-auto pr-1">
+        <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
+          {/* Step 1: Subject Selection */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-2">
+            <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">1. Choose Subject:</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[140px] overflow-y-auto pr-1">
               {SUBJECTS.map((sub) => {
                 const isSelected = subject === sub.id;
                 return (
@@ -122,162 +132,118 @@ export default function ShareModal({
                     key={sub.id}
                     type="button"
                     onClick={() => setSubject(sub.id)}
-                    className={`p-2 rounded-xl border font-semibold text-left flex items-center gap-2 transition text-xs ${
+                    className={`p-2 rounded-xl flex items-center gap-2 border text-left transition active:scale-95 ${
                       isSelected
-                        ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 shadow-xs'
-                        : 'bg-white dark:bg-zinc-800/80 border-slate-200 dark:border-zinc-700 theme-text-main hover:border-slate-300 dark:hover:border-zinc-600 shadow-2xs'
+                        ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
+                        : 'bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 border-slate-200 dark:border-zinc-700 hover:bg-slate-100'
                     }`}
                   >
-                    <span className="text-base">{sub.icon}</span>
-                    <span className="truncate">{sub.fullName}</span>
+                    <span className="text-lg">{sub.icon}</span>
+                    <span className="truncate font-semibold text-[11px]">{sub.label}</span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Step 2: Material Type */}
-          <div className="theme-subtle p-3 rounded-2xl border theme-border space-y-2">
-            <span className="block font-bold theme-text-main text-[11px]">2. What kind of material is this?</span>
-            <div className="grid grid-cols-3 gap-1.5">
-              <button
-                type="button"
-                onClick={() => setType('HW')}
-                className={`p-2 rounded-xl border text-center font-semibold transition ${
-                  type === 'HW'
-                    ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 shadow-xs'
-                    : 'bg-white dark:bg-zinc-800/80 border-slate-200 dark:border-zinc-700 theme-text-main shadow-2xs'
-                }`}
-              >
-                <span className="block text-base">⏰</span>
-                <span className="text-[10px]">Homework</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setType('BLANK')}
-                className={`p-2 rounded-xl border text-center font-semibold transition ${
-                  type === 'BLANK'
-                    ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 shadow-xs'
-                    : 'bg-white dark:bg-zinc-800/80 border-slate-200 dark:border-zinc-700 theme-text-main shadow-2xs'
-                }`}
-              >
-                <span className="block text-base">📝</span>
-                <span className="text-[10px]">Practice</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setType('SOLVED')}
-                className={`p-2 rounded-xl border text-center font-semibold transition ${
-                  type === 'SOLVED'
-                    ? 'bg-neutral-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-neutral-900 dark:border-zinc-100 shadow-xs'
-                    : 'bg-white dark:bg-zinc-800/80 border-slate-200 dark:border-zinc-700 theme-text-main shadow-2xs'
-                }`}
-              >
-                <span className="block text-base">✅</span>
-                <span className="text-[10px]">Solved Notes</span>
-              </button>
+          {/* Step 2: Note Type */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-2">
+            <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">2. What kind of note is this?</span>
+            <div className="grid grid-cols-3 gap-2 text-center">
+              {[
+                { id: 'HW', label: '⏰ Homework', desc: 'Due Tomorrow' },
+                { id: 'SOLVED', label: '✅ Solved Notes', desc: 'Answers/Steps' },
+                { id: 'BLANK', label: '📝 Worksheet', desc: 'Practice Sheet' },
+              ].map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setType(t.id as any)}
+                  className={`p-2.5 rounded-xl border flex flex-col items-center justify-center transition active:scale-95 ${
+                    type === t.id
+                      ? 'bg-blue-600 text-white border-blue-600 font-bold shadow-xs'
+                      : 'bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 border-slate-200 dark:border-zinc-700 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className="font-bold text-[11px]">{t.label}</span>
+                  <span className="text-[9px] opacity-80">{t.desc}</span>
+                </button>
+              ))}
             </div>
 
-            {/* Deadline Box (Only shown if Homework) */}
             {type === 'HW' && (
-              <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/25 space-y-1.5 animate-fade-in">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-extrabold text-rose-500 flex items-center gap-1">
-                    <span>🚨 Homework Deadline</span>
-                  </span>
-                  <span className="text-[9px] text-slate-400">Classmates get alerts</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 dark:border-zinc-700 animate-fade-in">
+                <div>
+                  <label className="block text-[10px] text-slate-500 dark:text-zinc-400 mb-1">Due Day</label>
                   <select
                     value={dueDay}
                     onChange={(e) => setDueDay(e.target.value)}
-                    className="w-full theme-input border rounded-lg p-2 font-medium"
+                    className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2 text-xs font-semibold"
                   >
-                    <option value="Tomorrow">Due Tomorrow</option>
-                    <option value="Thursday">Due Thursday</option>
-                    <option value="Friday">Due Friday</option>
-                    <option value="Monday">Due Next Monday</option>
+                    <option value="Tomorrow">Tomorrow</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Friday">Friday</option>
                   </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-slate-500 dark:text-zinc-400 mb-1">Due Time</label>
                   <select
                     value={dueTime}
                     onChange={(e) => setDueTime(e.target.value)}
-                    className="w-full theme-input border rounded-lg p-2 font-medium"
+                    className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2 text-xs font-semibold"
                   >
                     <option value="8:00 AM (Morning)">8:00 AM (Morning)</option>
-                    <option value="12:00 PM (Lunch)">12:00 PM</option>
-                    <option value="4:00 PM (Evening)">4:00 PM</option>
+                    <option value="11:30 AM (Recess)">11:30 AM (Recess)</option>
+                    <option value="1:30 PM (Period 6)">1:30 PM (Period 6)</option>
                   </select>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Step 3: Title */}
-          <div className="theme-subtle p-3 rounded-2xl border theme-border space-y-1">
-            <span className="block font-bold theme-text-main text-[11px]">3. Chapter / Exercise Name:</span>
+          {/* Step 3: Title & Photos */}
+          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-800 space-y-2.5">
+            <span className="block font-bold text-slate-800 dark:text-slate-200 text-xs">3. Chapter & Attachments:</span>
             <input
               type="text"
+              required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Chapter 7 Exercise 7.2"
-              required
-              className="w-full theme-input border rounded-xl p-2.5 placeholder-slate-400 focus:outline-none font-semibold text-xs"
+              placeholder="e.g. Chapter 4 Factorisation Exercise 4B complete notes"
+              className="w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-slate-100 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
 
-          {/* Step 4: Big Camera / Photo Box */}
-          <div className="theme-subtle p-3 rounded-2xl border theme-border space-y-2">
-            <span className="block font-bold theme-text-main text-[11px]">4. Attach Notebook Photos or PDF:</span>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={simulateSnap}
-                className="border border-dashed border-slate-300 dark:border-zinc-700 hover:border-slate-400 dark:hover:border-zinc-600 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl p-3 text-center cursor-pointer transition active:scale-98"
-              >
-                <span className="text-2xl block mb-0.5">📸</span>
-                <p className="font-bold theme-text-main text-xs">Snap Notebook</p>
-                <p className="text-[9px] theme-text-muted mt-0.5">Auto-merges pages</p>
-              </button>
-
-              <label className="border border-dashed border-slate-300 dark:border-zinc-700 hover:border-slate-400 dark:hover:border-zinc-600 bg-slate-50 dark:bg-zinc-800/50 rounded-2xl p-3 text-center cursor-pointer transition active:scale-98 flex flex-col items-center justify-center">
-                <span className="text-2xl block mb-0.5">📂</span>
-                <p className="font-bold theme-text-main text-xs">Browse Files</p>
-                <p className="text-[9px] theme-text-muted mt-0.5">Upload PDF or images</p>
+            <div className="flex items-center gap-2 pt-1">
+              <label className="flex-1 cursor-pointer py-2.5 px-3 rounded-xl border border-dashed border-blue-400 bg-blue-50/70 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-center font-bold flex items-center justify-center gap-2 hover:bg-blue-100 transition">
+                <span>📁</span>
+                <span>{photoCount > 0 ? `${photoCount} Pages Selected` : 'Attach Photos / PDF'}</span>
                 <input
                   type="file"
-                  accept="image/*,application/pdf"
                   multiple
+                  accept="image/*,application/pdf"
                   onChange={handlePhotoSelect}
                   className="hidden"
                 />
               </label>
-            </div>
 
-            {photoCount > 0 && (
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-2 animate-fade-in">
-                <div className="flex items-center justify-between text-[11px]">
-                  <span className="font-bold text-emerald-500 flex items-center gap-1">
-                    <span>✓</span> {photoCount} pages selected
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">Ready to merge</span>
-                </div>
-                <div className="grid grid-cols-3 gap-1.5 text-center text-[9px] font-mono theme-text-muted">
-                  <div className="p-1.5 rounded-lg theme-card border">Page 1 📄</div>
-                  <div className="p-1.5 rounded-lg theme-card border">Page 2 📄</div>
-                  <div className="p-1.5 rounded-lg theme-card border">Page 3 📄</div>
-                </div>
-              </div>
-            )}
+              <button
+                type="button"
+                onClick={simulateSnap}
+                className="py-2.5 px-3 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 font-bold hover:bg-slate-100 transition"
+                title="Quick 3-Page Camera Snap"
+              >
+                📸 Snap
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full accent-btn font-extrabold py-3.5 rounded-2xl shadow-lg transition active:scale-98 flex items-center justify-center gap-2 text-xs"
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-xs shadow-md transition active:scale-98 disabled:opacity-50"
           >
-            <span>{isSubmitting ? 'Uploading...' : '🚀 Share with Classmates'}</span>
-            <span className="bg-white/20 px-2 py-0.5 rounded-md text-[10px]">+50 XP</span>
+            {isSubmitting ? 'Sharing with Class...' : 'Post Worksheet & Earn +50 XP 🚀'}
           </button>
         </form>
       </div>

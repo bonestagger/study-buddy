@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { TabType } from './BottomNav';
 
 interface AppHeaderProps {
   user: {
@@ -13,6 +14,9 @@ interface AppHeaderProps {
   unreadCount: number;
   onOpenNotifications: () => void;
   onOpenSettings: () => void;
+  activeTab?: TabType;
+  onTabChange?: (tab: TabType) => void;
+  onOpenShare?: () => void;
 }
 
 export default function AppHeader({
@@ -20,15 +24,26 @@ export default function AppHeader({
   unreadCount,
   onOpenNotifications,
   onOpenSettings,
+  activeTab = 'home',
+  onTabChange,
+  onOpenShare,
 }: AppHeaderProps) {
+  const navTabs: Array<{ id: TabType; label: string; icon: string }> = [
+    { id: 'home', label: 'Home', icon: '🏠' },
+    { id: 'requests', label: 'Requests', icon: '📋' },
+    { id: 'qna', label: 'Doubts', icon: '💬' },
+    { id: 'profile', label: 'My Desk', icon: '👤' },
+  ];
+
   return (
-    <header className="px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between z-20 transition-colors sticky top-0">
+    <header className="px-4 sm:px-6 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between z-20 transition-colors sticky top-0">
+      {/* Brand & User Identity */}
       <div
         className="flex items-center space-x-3 cursor-pointer active:opacity-80 transition"
         onClick={onOpenSettings}
         title="Tap to change avatar & settings"
       >
-        <div className="w-10 h-10 rounded-full overflow-hidden border border-blue-200 dark:border-zinc-700 bg-blue-50 dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 flex items-center justify-center text-xl shadow-xs">
+        <div className="w-10 h-10 rounded-full overflow-hidden border border-blue-200 dark:border-zinc-700 bg-blue-50 dark:bg-zinc-800 text-slate-800 dark:text-zinc-100 flex items-center justify-center text-xl shadow-xs flex-shrink-0">
           {user.pfpType === 'image' && user.pfpValue ? (
             <img src={user.pfpValue} alt="User Avatar" className="w-full h-full object-cover" />
           ) : (
@@ -37,18 +52,51 @@ export default function AppHeader({
         </div>
         <div>
           <div className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 leading-none">
-            <span>{user.name}</span>
-            <span className="px-2 py-0.5 bg-blue-50 dark:bg-zinc-800 text-blue-700 dark:text-blue-300 text-[10px] rounded-full font-bold border border-blue-200/80 dark:border-zinc-700">
-              {user.division}
+            <span className="truncate max-w-[120px] sm:max-w-[180px]">{user.name || 'Student'}</span>
+            <span className="px-2 py-0.5 bg-blue-50 dark:bg-zinc-800 text-blue-700 dark:text-blue-300 text-[10px] rounded-full font-bold border border-blue-200/80 dark:border-zinc-700 flex-shrink-0">
+              {user.division || '8-B'}
             </span>
           </div>
-          <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1 truncate max-w-[200px]">
-            🎯 {user.motto}
+          <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1 truncate max-w-[150px] sm:max-w-[220px]">
+            🎯 {user.motto || 'Prepping for UT2 📚'}
           </p>
         </div>
       </div>
 
+      {/* Desktop Navigation Links (Hidden on Mobile) */}
+      <nav className="hidden md:flex items-center gap-1.5 bg-slate-100 dark:bg-zinc-800/80 p-1 rounded-2xl border border-slate-200/80 dark:border-zinc-700/80">
+        {navTabs.map((tab) => {
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onTabChange?.(tab.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition active:scale-95 ${
+                isActive
+                  ? 'bg-white dark:bg-zinc-900 text-blue-600 dark:text-blue-400 shadow-xs'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100'
+              }`}
+            >
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Action Buttons & Desktop Share Note Button */}
       <div className="flex items-center space-x-2">
+        {onOpenShare && (
+          <button
+            onClick={onOpenShare}
+            className="hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs active:scale-95 transition"
+            title="Share new notes with class"
+          >
+            <span>+</span>
+            <span>Share Note</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenNotifications}
           className="relative p-2 rounded-full border border-slate-200 dark:border-zinc-700 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-600 dark:text-zinc-300 active:scale-95 transition"

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SettingsSheetProps {
   isOpen: boolean;
@@ -45,6 +45,17 @@ export default function SettingsSheet({
   const [palette] = useState(user.palette || 'palette-retro');
   const [themeMode, setThemeMode] = useState(user.themeMode || 'light');
 
+  // Close on Escape key for desktop PC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleMascotSelect = (emoji: string) => {
@@ -88,7 +99,7 @@ export default function SettingsSheet({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex flex-col justify-end sm:justify-center items-center p-0 sm:p-4 animate-fade-in">
-      <div className="w-full sm:max-w-md bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-3xl p-5 border border-slate-200 dark:border-zinc-800 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div className="w-full sm:max-w-md bg-white dark:bg-zinc-900 rounded-t-3xl sm:rounded-3xl p-5 border border-slate-200 dark:border-zinc-800 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto pb-[max(1.25rem,env(safe-area-inset-bottom))]">
         <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-zinc-800">
           <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <span>⚙️ Profile & Settings</span>
@@ -97,7 +108,7 @@ export default function SettingsSheet({
             onClick={onClose}
             className="text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 transition"
           >
-            ✕ Close
+            ✕ Close (Esc)
           </button>
         </div>
 

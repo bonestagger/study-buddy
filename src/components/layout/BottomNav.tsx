@@ -11,7 +11,7 @@ interface BottomNavProps {
 
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
-    <nav className="fixed bottom-0 inset-x-0 max-w-2xl mx-auto bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-t border-slate-200 dark:border-zinc-800 flex items-center justify-around py-2.5 z-30 select-none transition-colors shadow-lg">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-t border-slate-200 dark:border-zinc-800 flex items-center justify-around py-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] z-30 select-none transition-colors shadow-lg">
       {/* 1. Home */}
       <button
         data-testid="nav-home"
@@ -54,7 +54,7 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
         <span className="text-[10px]">Requests</span>
       </button>
 
-      {/* 3. Share Note (Vibrant Google Plus Button) */}
+      {/* 3. Share Note (Mobile Center Button) */}
       <button
         data-testid="nav-upload"
         onClick={() => onTabChange('upload')}

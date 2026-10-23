@@ -433,14 +433,14 @@ export default function Home() {
 
   return (
     <div
-      className={`min-h-screen w-full flex justify-center bg-slate-100 dark:bg-zinc-950 ${
+      className={`min-h-dvh w-full flex justify-center bg-slate-100 dark:bg-zinc-950 ${
         currentUser.themeMode === 'dark' ? 'dark' : ''
       }`}
     >
       <div
         className={`${currentUser.palette} ${
           currentUser.themeMode === 'dark' ? 'app-dark mode-dark' : 'app-light mode-light'
-        } theme-screen relative w-full max-w-2xl min-h-screen shadow-md flex flex-col transition-colors duration-200 border-x border-slate-200 dark:border-zinc-800 bg-[#f8fafd] dark:bg-[#121212]`}
+        } theme-screen relative w-full max-w-6xl min-h-dvh shadow-sm flex flex-col transition-colors duration-200 border-x border-slate-200 dark:border-zinc-800 bg-[#f8fafd] dark:bg-[#121212]`}
       >
         {/* Strict Login Gate */}
         {!isLoggedIn ? (
@@ -453,11 +453,14 @@ export default function Home() {
                 unreadCount={unreadNotifs}
                 onOpenNotifications={() => setIsNotifOpen(true)}
                 onOpenSettings={() => setIsSettingsOpen(true)}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                onOpenShare={() => setIsShareModalOpen(true)}
               />
 
               {/* Main Content Areas */}
               {activeTab === 'home' && (
-                <main className="flex-1 overflow-y-auto pb-24 px-3.5 pt-3 space-y-3.5 animate-fade-in">
+                <main className="flex-1 overflow-y-auto pb-24 md:pb-8 px-4 sm:px-6 lg:px-8 pt-4 space-y-4 animate-fade-in">
                   {/* Search Bar */}
                   <div className="relative">
                     <svg
@@ -512,18 +515,34 @@ export default function Home() {
                       </span>
                     </div>
 
-                    <div className="space-y-2.5">
-                      {filteredNotes.map((note) => (
-                        <WorksheetCard
-                          key={note.id}
-                          note={note}
-                          currentUserId={currentUser.id}
-                          onOpenPdf={(n) => setActivePdfNote(n)}
-                          onKudos={handleKudos}
-                          onBookmark={handleBookmark}
-                        />
-                      ))}
-                    </div>
+                    {filteredNotes.length === 0 ? (
+                      <div className="text-center py-12 px-4 rounded-3xl border border-dashed border-slate-300 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/40">
+                        <span className="text-4xl block mb-2">📑</span>
+                        <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">No worksheets found</h3>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 max-w-sm mx-auto">
+                          Be the first in your class to upload notes or homework practice sheets!
+                        </p>
+                        <button
+                          onClick={() => setIsShareModalOpen(true)}
+                          className="mt-3.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs active:scale-95 transition"
+                        >
+                          + Share First Worksheet
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                        {filteredNotes.map((note) => (
+                          <WorksheetCard
+                            key={note.id}
+                            note={note}
+                            currentUserId={currentUser.id}
+                            onOpenPdf={(n) => setActivePdfNote(n)}
+                            onKudos={handleKudos}
+                            onBookmark={handleBookmark}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </main>
               )}
